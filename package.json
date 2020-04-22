@@ -1,0 +1,28 @@
+{
+  "name": "soa-moleculer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "moleculer-runner --repl --hot services",
+    "start": "moleculer-runner",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teodorislava/moleculer-intro.git"
+  },
+  "author": "Teodora",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teodorislava/moleculer-intro/issues"
+  },
+  "homepage": "https://github.com/teodorislava/moleculer-intro#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "moleculer": "^0.14.6",
+    "moleculer-repl": "^0.6.4",
+    "nats": "^1.4.8"
+  }
+}

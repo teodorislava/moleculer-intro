@@ -1,0 +1,35 @@
+version: '3.0'
+services:
+    nats:
+      image: nats:latest
+    gateway:
+      build:
+        context: .
+      image: service-gateway
+      env_file: docker-compose.env
+      environment:
+        NODEID: "node-gateway"
+        SERVICES: gateway
+        PORT: 3000
+      ports:
+        - "3000:3000"
+      depends_on:
+        - nats
+    email:
+      build:
+        context: .
+      env_file: docker-compose.env
+      environment:
+        NODEID: "node-email"
+        SERVICES: email
+      depends_on:
+        - nats
+    movies:
+      build:
+        context: .
+      env_file: docker-compose.env
+      environment:
+        NODEID: "node-movies"
+        SERVICES: movies
+      depends_on:
+        - nats
