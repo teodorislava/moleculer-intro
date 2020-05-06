@@ -3,10 +3,10 @@
 module.exports = {
    name: "email",
    events: {
-       "movie.created": {
+       "movie.create": {
            group: "other",
            handler(payload) {
-              console.log('Recieved "movie.created" event in email service with payload: ', payload);
+              console.log('Recieved "movie.create" event in email service with payload: ', payload);
            }
        }
    },

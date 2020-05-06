@@ -1,30 +1,66 @@
-"use strict"; 
+"use strict";
 
-const movies = [
-    {id: 1, title: 'Sharknado'},
-    {id: 2, title: 'Roma'},
-];
+const DbService = require("../mixins/db.mixin");
 
 module.exports = {
-    name: "movies",
+	name: "movies",
+	mixins: [
+		DbService("movies")
+	],
 
-    actions: {
-        listAll(ctx) {
-           return Promise.resolve({ movies: movies });
-        },
-        getById(ctx) {
-            const id = Number(ctx.params.id);
-            return Promise.resolve(movies.find(movie => movie.id === id ));
-        },
-        create(ctx) {
-            const lastId = Math.max(...movies.map(movie => movie.id));
-            const movie = {
-                id: lastId + 1,
-                ...ctx.params.payload,
-            };
-            movies.push(movie);
-            this.broker.emit("movie.created", movie);
-            return Promise.resolve(movie);
-        }
-    },
+	settings: {
+		fields: ["_id", "title", "description", "year", "director", "mainActor"],
+
+		entityValidator: {
+			title: { type: "string", min: 1 },
+			description: { type: "string", min: 1 },
+			year: { type: "string", min: 1 },
+            director: { type: "string", min: 1 },
+			mainActor: { type: "string", optional: true }
+		}
+	},
+
+	actions: {
+
+		/**
+		 * Create a new movie.
+		 *
+		 * @actions
+		 * @param {Object} movie - Movie entity
+		 *
+		 * @returns {Object} Created entity
+		 */
+		create: {
+			params: {
+				movie: { type: "object" }
+			},
+			async handler(ctx) {
+				let entity = ctx.params.movie;
+				await this.validateEntity(entity);
+				
+				const doc = await this.adapter.insert(entity);
+				this.broker.emit("movie.create", doc);
+				return doc;
+			}
+		},
+
+		/**
+		 * List all movies.
+		 *
+		 * @actions
+		 *
+		 * @returns {Object} List of movies
+		 */
+		list: {
+			async handler(ctx) {
+
+				let params = {
+					sort: ["title"]
+				};
+
+				const res = await this.adapter.find(params);
+				return res;
+			}
+		},
+	}
 };

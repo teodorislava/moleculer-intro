@@ -10,24 +10,13 @@ module.exports = {
     methods: {
         initRoutes(app) {
             app.get("/movies", this.getMovies);
-            app.get("/movies/:id", this.getMovie);
             app.post("/movies", this.createMovie);
         },
         getMovies(req, res) {
             return Promise.resolve()
                 .then(() => {
-                    return this.broker.call("movies.listAll").then(movies => {
+                    return this.broker.call("movies.list").then(movies => {
                         res.send(movies);
-                    });
-                })
-                .catch(this.handleErr(res));
-        },
-        getMovie(req, res) {
-            const id = req.params.id;
-            return Promise.resolve()
-                .then(() => {
-                    return this.broker.call("movies.getById", {id: id}).then(movie => {
-                        res.send(movie);
                     });
                 })
                 .catch(this.handleErr(res));
@@ -36,7 +25,7 @@ module.exports = {
             const payload = req.body;
             return Promise.resolve()
           .then(() => {
-              return this.broker.call("movies.create", { payload }).then(movie =>
+              return this.broker.call("movies.create", { movie: payload }).then(movie =>
                     res.send(movie)
                 );
           })

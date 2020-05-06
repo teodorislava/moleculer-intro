@@ -1,5 +1,9 @@
 version: '3.0'
 services:
+    mongo:
+      image: mongo
+      volumes:
+        - mongodata:/data/db
     nats:
       image: nats:latest
     gateway:
@@ -33,3 +37,8 @@ services:
         SERVICES: movies
       depends_on:
         - nats
+        - mongo
+      links:
+        - mongo
+volumes:
+  mongodata:
